@@ -1,0 +1,251 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+    <style>
+        .counter{
+            position: relative;
+            height:76px;
+            float:left;
+            display:inline;
+            margin-left:5px;
+            width:53px;
+        }
+        .item{
+            float:left;
+            display:inline;
+            margin-right:20px;
+        }
+        .number{
+            width:53px;
+            height:38px;
+            position: absolute;
+            z-index:-1;
+        }
+        .number-1{
+            z-index:2;
+        }
+        .number-2{
+            z-index:1;
+        }
+
+        .top{
+            bottom:38px;
+        }
+        .bottom{
+            top:38px;
+            height:0;
+        }
+    </style>
+</head>
+<body>
+    <div class="item">
+        <div class="counter" id="yea-1">
+            
+        </div>
+        <div class="counter" id="yea-2">
+            
+        </div>
+        <div class="counter" id="yea-3">
+            
+        </div>
+        <div class="counter" id="yea-4">
+            
+        </div>年
+    </div>
+    <div class="item">
+        <div class="counter" id="mon-1">
+            
+        </div>
+        <div class="counter" id="mon-2">
+            
+        </div>月
+    </div>
+    <div class="item">
+        <div class="counter" id="day-1">
+
+        </div>
+        <div class="counter" id="day-2">
+
+        </div>日
+    </div>
+    <div class="item">
+        <div class="counter" id="hou-1">
+
+        </div>
+        <div class="counter" id="hou-2">
+
+        </div>时
+    </div>
+    <div class="item">
+        <div class="counter" id="min-1">
+
+        </div>
+        <div class="counter" id="min-2">
+
+        </div>分
+    </div>
+    <div class="item">
+        <div class="counter" id="sec-1">
+
+        </div>
+        <div class="counter" id="sec-2">
+
+        </div>秒
+    </div>
+    <script type="text/javascript">
+    	jQuery(document).ready(function($) {
+
+    		var Calendar = {
+    			creat : function(obj){
+    				var calendar = obj || {};
+                    calendar.lastNum = 0;
+                    calendar.zIndex = 2;
+    				calendar.creat = function(){
+				    	var i=0;
+			    		while(i<10){
+							//载入图片
+			    			var topImg = $('<img>');
+			    			topImg.attr('src', "imgnum/" + i + "-top.png");
+			    			topImg.addClass("top number");
+			    			var bottomImg = $('<img>');
+			    			bottomImg.attr('src', "imgnum/" + i + "-bottom.png");
+			    			bottomImg.addClass("bottom number");
+			    			this.ele.append(topImg);
+			    			this.ele.append(bottomImg);
+			    			i++;
+				    	};
+                        //第一张 也就是 0 显示出来
+                        this.ele.children('img:eq(0)').css({'z-index':1, 'height':'38px'});
+                        this.ele.children('img:eq(1)').css('height', '38px')
+    				};
+    				calendar.show = function(num){
+						//相等return，因为初始显示的是0，初始数字也为0
+    					if(this.lastNum == num) return;
+                        var self = this;
+                        var ln = this.lastNum;
+    					var newTop = this.ele.children('img:eq('+num*2+')');
+                        var newBottom = newTop.next();                       
+    					var oldTop = this.ele.children('img:eq('+ln*2+')');
+                        var oldBottom = oldTop.next();
+						
+						//将新数字放到当前数字的下面
+                        newTop.css('z-index', self.zIndex-2);
+                        newBottom.css('z-index', self.zIndex-2);
+						
+						//旧数字高度变成0，然后新数字提到前面。
+                        oldTop.animate({height:'0px'}, 200, function(){
+                            newTop.css('z-index', self.zIndex++);
+                            newBottom.css('z-index', self.zIndex);
+							//旧数字上半部高度继续设为38px，不然第二轮后失去高度
+                            oldTop.css('height', '38px');
+                            newBottom.animate({height:'38px'}, 200, function(){
+                                //旧数字的下半部高度继续设为0，不然第二轮会失去过渡效果
+								oldBottom.css('height', 0);
+                            });
+                        });
+    					
+						//保存上一个数字 初始为 0
+                        this.lastNum = num;
+    				}
+    				return calendar;
+				}
+    		};
+
+    		var sec2 = Calendar.creat({
+    			ele : $('#sec-2')
+    		});
+            var sec1 = Calendar.creat({
+                ele : $('#sec-1')
+            });
+
+            var min2 = Calendar.creat({
+                ele : $('#min-2')
+            });
+            var min1 = Calendar.creat({
+                ele : $('#min-1')
+            }); 
+
+            var hou2 = Calendar.creat({
+                ele : $('#hou-2')
+            });
+            var hou1 = Calendar.creat({
+                ele : $('#hou-1')
+            });
+
+            var day2 = Calendar.creat({
+                ele : $('#day-2')
+            });
+            var day1 = Calendar.creat({
+                ele : $('#day-1')
+            });
+
+            var mon2 = Calendar.creat({
+                ele : $('#mon-2')
+            });
+            var mon1 = Calendar.creat({
+                ele : $('#mon-1')
+            });
+            
+            var yea4 = Calendar.creat({
+                ele : $('#yea-4')
+            });
+            var yea3 = Calendar.creat({
+                ele : $('#yea-3')
+            });
+            var yea2 = Calendar.creat({
+                ele : $('#yea-2')
+            });
+            var yea1 = Calendar.creat({
+                ele : $('#yea-1')
+            });
+	    		sec2.creat();
+                sec1.creat();
+                min2.creat();
+                min1.creat();
+                hou2.creat();
+                hou1.creat();
+                day2.creat();                
+                day1.creat();
+                mon2.creat();
+                mon1.creat();
+                yea4.creat();
+                yea3.creat();
+                yea2.creat();
+                yea1.creat();
+
+            function render(){
+                var date = new Date();
+                var day, hour, minute, second;
+                year   = date.getFullYear();
+                month  = date.getMonth()+1;
+                day    = date.getDate(),
+                hour   = date.getHours(),
+                minute = date.getMinutes(),
+                second = date.getSeconds();
+
+                sec2.show(second%10);
+                sec1.show((second-second%10)/10);
+                min2.show(minute%10);
+                min1.show((minute-minute%10)/10);
+                hou2.show(hour%10);
+                hou1.show((hour-hour%10)/10);
+                day2.show(day%10);
+                day1.show((day-day%10)/10);
+                mon2.show(month%10);
+                mon1.show(month-month%10);
+                yea4.show(year%10);
+                yea3.show((year%100-year%10)/10);
+                yea2.show((year%1000-year%100)/100);
+                yea1.show((year-year%1000)/1000)
+            }
+            render();
+            setInterval(render, 1000);
+
+
+    	});
+    </script>
+</body>
+</html>
